@@ -1,0 +1,13 @@
+
+
+FROM golang:{{.GoVersion}}-alpine AS builder
+WORKDIR /app
+{{if .HasGoSum}} COPY go.mod go.sum ./ {{else}} COPY go.mod ./{{end}}
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -o /app/{{.BinaryName}} .
+
+FROM alpine:latest
+COPY --from=builder /app/{{.BinaryName}} /{{.BinaryName}}
+RUN chmod +x /{{.BinaryName}}
+ENTRYPOINT ["/{{.BinaryName}}"]
