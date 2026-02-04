@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/teresamychu/dockerize/generators"
+	"github.com/teresamychu/dockerizer/generators"
 )
 
 var golangTemplate string
@@ -27,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	module, goversion := parseGoMod(filepath.Join(path, "go.mod"))
+	module, goversion, _ := parseGoMod(filepath.Join(path, "go.mod"))
 
 	hasGoSum := fileExists(filepath.Join(path, "go.sum"))
 

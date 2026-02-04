@@ -1,0 +1,6 @@
+services:
+  {{.ServiceName}}:
+    build: .
+    ports:
+      - "{{.Port}}:{{.Port}}"
+    restart: unless-stopped

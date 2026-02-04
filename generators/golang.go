@@ -20,7 +20,6 @@ func NewGoGenerator() *GoGenerator {
 }
 
 func (g *GoGenerator) Generate(projectPath string) (string, error) {
-	// TODO: Implement using templates/go.tmpl
 	template, _ := template2.New("golang").Parse(golangTemp)
 
 	var buf bytes.Buffer
@@ -29,4 +28,9 @@ func (g *GoGenerator) Generate(projectPath string) (string, error) {
 		return "", err
 	}
 	return buf.String(), nil
+}
+
+type GoComposeGenerator struct {
+	ServiceName string
+	Port        string
 }
