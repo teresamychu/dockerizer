@@ -21,7 +21,7 @@ func NewGoGenerator() *GoGenerator {
 	return &GoGenerator{}
 }
 
-func (g *GoGenerator) GenerateDockerfile(projectPath string) (string, error) {
+func (g *GoGenerator) GenerateDockerfile() (string, error) {
 	template, _ := template2.New("golang").Parse(golangTemp)
 
 	var buf bytes.Buffer
@@ -33,7 +33,7 @@ func (g *GoGenerator) GenerateDockerfile(projectPath string) (string, error) {
 
 }
 
-func (g *GoGenerator) GenerateComposeFile(projectPath string) (string, error) {
+func (g *GoGenerator) GenerateComposeFile() (string, error) {
 	composeTemplate, _ := template2.New("compose").Parse(composeTemp)
 
 	var compose bytes.Buffer

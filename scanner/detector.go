@@ -1,4 +1,4 @@
-package main
+package scanner
 
 import (
 	"os"
@@ -25,9 +25,13 @@ func Detect(projectPath string) Language {
 	return LangUnknown
 }
 
-func fileExists(path string) bool {
+func FileExists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
+}
+
+func fileExists(path string) bool {
+	return FileExists(path)
 }
 
 func markerPath(projectPath, filename string) string {

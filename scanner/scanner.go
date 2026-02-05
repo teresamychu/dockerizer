@@ -1,6 +1,7 @@
-package main
+package scanner
 
 import (
+	_ "embed"
 	"maps"
 	"os"
 	"path/filepath"
@@ -13,14 +14,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// ImportsMap maps Go package imports to services
-// Uses latest available image of each detected service. - this should probably be CLI configurable at some point.
-var ImportsMap = map[string]generators.ServiceInfo{
-	"lib/pq":       {Name: "postgres", Image: "postgres:16-alpine", Port: "5432"},
-	"jackc/pgx":    {Name: "postgres", Image: "postgres:16-alpine", Port: "5432"},
-	"mysql":        {Name: "mysql", Image: "mysql:8", Port: "3306"},
-	"go-redis":     {Name: "redis", Image: "redis:alpine", Port: "6379"},
-	"mongo-driver": {Name: "mongo", Image: "mongo:latest", Port: "27017"},
+//go:embed config/services.yaml
+var servicesYAML []byte
+
+// ServiceDefs loaded from services.yaml
+var ServiceDefs = LoadServiceDefs()
+
+func LoadServiceDefs() map[string]generators.ServiceDef {
+	defs := make(map[string]generators.ServiceDef)
+	yaml.Unmarshal(servicesYAML, &defs)
+	return defs
 }
 
 // ParseGoMod extracts module info and detects services from go.mod
@@ -36,17 +39,36 @@ func ParseGoMod(path string) (moduleName string, goVersion string, services []ge
 
 	moduleName = filepath.Base(parsedFile.Module.Mod.Path)
 	goVersion = parsedFile.Go.Version
+	services = DetectServicesFromImports(parsedFile)
+
+	return moduleName, goVersion, services
+}
+
+// DetectServicesFromImports matches go.mod requires against ServiceDefs
+func DetectServicesFromImports(parsedFile *modfile.File) []generators.ServiceInfo {
+	var services []generators.ServiceInfo
+	seen := make(map[string]bool)
 
 	for _, require := range parsedFile.Require {
-		for prefix, svc := range ImportsMap {
-			if strings.Contains(require.Mod.Path, prefix) {
-				services = append(services, svc)
-				break
+		for serviceName, def := range ServiceDefs {
+			if seen[serviceName] {
+				continue
+			}
+			for _, pattern := range def.Imports {
+				if strings.Contains(require.Mod.Path, pattern) {
+					services = append(services, generators.ServiceInfo{
+						Name:  serviceName,
+						Image: def.Image,
+						Port:  def.Port,
+					})
+					seen[serviceName] = true
+					break
+				}
 			}
 		}
 	}
 
-	return moduleName, goVersion, services
+	return services
 }
 
 // ScanEnvFiles reads .env files and returns key-value pairs
@@ -101,8 +123,8 @@ func ScanYamlFiles(projectPath string) map[string]string {
 	return configMap
 }
 
-// ScanConfig scans all config sources and returns AppConfig
-func ScanConfig(projectPath string) generators.AppConfig {
+// ScanFiles scans all config sources and returns AppConfig
+func ScanFiles(projectPath string) generators.AppConfig {
 	// Scan all sources
 	envVars := ScanEnvFiles(projectPath)
 	yamlVars := ScanYamlFiles(projectPath)
@@ -112,11 +134,12 @@ func ScanConfig(projectPath string) generators.AppConfig {
 	maps.Copy(allVars, yamlVars)
 	maps.Copy(allVars, envVars)
 
-	// Extract port
 	config := generators.AppConfig{
 		EnvVars: allVars,
 	}
 
+	// Extract port
+	//TODO: i feel like this should be kept in the yaml file too.
 	portKeys := []string{"PORT", "port"}
 	for _, key := range portKeys {
 		if port, ok := allVars[key]; ok && port != "" {

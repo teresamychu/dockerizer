@@ -14,7 +14,7 @@ func TestGoGenerator_Generate_BinaryName(t *testing.T) {
 		},
 	}
 
-	output, err := g.GenerateDockerfile(".")
+	output, err := g.GenerateDockerfile()
 	if err != nil {
 		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
@@ -33,7 +33,7 @@ func TestGoGenerator_Generate_GoVersion(t *testing.T) {
 		},
 	}
 
-	output, err := g.GenerateDockerfile(".")
+	output, err := g.GenerateDockerfile()
 	if err != nil {
 		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
@@ -52,7 +52,7 @@ func TestGoGenerator_Generate_WithGoSum(t *testing.T) {
 		},
 	}
 
-	output, err := g.GenerateDockerfile(".")
+	output, err := g.GenerateDockerfile()
 	if err != nil {
 		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
@@ -71,7 +71,7 @@ func TestGoGenerator_Generate_WithoutGoSum(t *testing.T) {
 		},
 	}
 
-	output, err := g.GenerateDockerfile(".")
+	output, err := g.GenerateDockerfile()
 	if err != nil {
 		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
@@ -94,7 +94,7 @@ func TestGoGenerator_Generate_MultiStage(t *testing.T) {
 		},
 	}
 
-	output, err := g.GenerateDockerfile(".")
+	output, err := g.GenerateDockerfile()
 	if err != nil {
 		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
@@ -122,7 +122,7 @@ func TestGoGenerator_Generate_EntryPoint(t *testing.T) {
 		},
 	}
 
-	output, err := g.GenerateDockerfile(".")
+	output, err := g.GenerateDockerfile()
 	if err != nil {
 		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}

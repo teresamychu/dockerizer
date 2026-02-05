@@ -1,4 +1,4 @@
-package main
+package scanner
 
 import (
 	"os"
@@ -136,7 +136,7 @@ func TestScanConfig_ExtractsPort(t *testing.T) {
 	dir := t.TempDir()
 	os.WriteFile(filepath.Join(dir, ".env"), []byte("PORT=9000"), 0644)
 
-	config := ScanConfig(dir)
+	config := ScanFiles(dir)
 
 	if config.Port != "9000" {
 		t.Errorf("expected port 9000, got %s", config.Port)

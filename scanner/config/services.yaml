@@ -1,0 +1,94 @@
+postgres:
+  imports:
+    - lib/pq
+    - jackc/pgx
+  code_patterns:
+    - sql.Open
+  image: postgres:16-alpine
+  port: "5432"
+
+mysql:
+  imports:
+    - go-sql-driver/mysql
+  code_patterns:
+    - sql.Open
+  image: mysql:8
+  port: "3306"
+
+redis:
+  imports:
+    - go-redis/redis
+    - redis/go-redis
+  code_patterns:
+    - redis.NewClient
+  image: redis:alpine
+  port: "6379"
+
+mongo:
+  imports:
+    - mongo-driver
+  code_patterns:
+    - mongo.Connect
+  image: mongo:7
+  port: "27017"
+
+elasticsearch:
+  imports:
+    - elastic/go-elasticsearch
+    - olivere/elastic
+  code_patterns: []
+  image: elasticsearch:8.12.0
+  port: "9200"
+
+rabbitmq:
+  imports:
+    - rabbitmq/amqp091-go
+    - streadway/amqp
+  code_patterns:
+    - amqp.Dial
+  image: rabbitmq:3-management-alpine
+  port: "5672"
+
+kafka:
+  imports:
+    - segmentio/kafka-go
+    - confluentinc/confluent-kafka
+  code_patterns: []
+  image: bitnami/kafka:latest
+  port: "9092"
+
+nats:
+  imports:
+    - nats-io/nats.go
+  code_patterns:
+    - nats.Connect
+  image: nats:alpine
+  port: "4222"
+
+memcached:
+  imports:
+    - bradfitz/gomemcache
+  code_patterns: []
+  image: memcached:alpine
+  port: "11211"
+
+minio:
+  imports:
+    - minio/minio-go
+  code_patterns: []
+  image: minio/minio:latest
+  port: "9000"
+
+influxdb:
+  imports:
+    - influxdata/influxdb-client-go
+  code_patterns: []
+  image: influxdb:2-alpine
+  port: "8086"
+
+cassandra:
+  imports:
+    - gocql/gocql
+  code_patterns: []
+  image: cassandra:4
+  port: "9042"
