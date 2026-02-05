@@ -1,0 +1,10 @@
+services:
+  with-postgres:
+    build: .
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"

@@ -7,14 +7,16 @@ import (
 
 func TestGoGenerator_Generate_BinaryName(t *testing.T) {
 	g := &GoGenerator{
-		BinaryName: "myapp",
-		GoVersion:  "1.22",
-		HasGoSum:   true,
+		AppInfo: AppInfo{
+			BinaryName: "myapp",
+			GoVersion:  "1.22",
+			HasGoSum:   true,
+		},
 	}
 
-	output, err := g.Generate(".")
+	output, err := g.GenerateDockerfile(".")
 	if err != nil {
-		t.Fatalf("Generate failed: %v", err)
+		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
 
 	if !strings.Contains(output, "myapp") {
@@ -24,14 +26,16 @@ func TestGoGenerator_Generate_BinaryName(t *testing.T) {
 
 func TestGoGenerator_Generate_GoVersion(t *testing.T) {
 	g := &GoGenerator{
-		BinaryName: "app",
-		GoVersion:  "1.22",
-		HasGoSum:   true,
+		AppInfo: AppInfo{
+			BinaryName: "app",
+			GoVersion:  "1.22",
+			HasGoSum:   true,
+		},
 	}
 
-	output, err := g.Generate(".")
+	output, err := g.GenerateDockerfile(".")
 	if err != nil {
-		t.Fatalf("Generate failed: %v", err)
+		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
 
 	if !strings.Contains(output, "golang:1.22-alpine") {
@@ -41,14 +45,16 @@ func TestGoGenerator_Generate_GoVersion(t *testing.T) {
 
 func TestGoGenerator_Generate_WithGoSum(t *testing.T) {
 	g := &GoGenerator{
-		BinaryName: "app",
-		GoVersion:  "1.22",
-		HasGoSum:   true,
+		AppInfo: AppInfo{
+			BinaryName: "app",
+			GoVersion:  "1.22",
+			HasGoSum:   true,
+		},
 	}
 
-	output, err := g.Generate(".")
+	output, err := g.GenerateDockerfile(".")
 	if err != nil {
-		t.Fatalf("Generate failed: %v", err)
+		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
 
 	if !strings.Contains(output, "COPY go.mod go.sum ./") {
@@ -58,14 +64,16 @@ func TestGoGenerator_Generate_WithGoSum(t *testing.T) {
 
 func TestGoGenerator_Generate_WithoutGoSum(t *testing.T) {
 	g := &GoGenerator{
-		BinaryName: "app",
-		GoVersion:  "1.22",
-		HasGoSum:   false,
+		AppInfo: AppInfo{
+			BinaryName: "app",
+			GoVersion:  "1.22",
+			HasGoSum:   false,
+		},
 	}
 
-	output, err := g.Generate(".")
+	output, err := g.GenerateDockerfile(".")
 	if err != nil {
-		t.Fatalf("Generate failed: %v", err)
+		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
 
 	if !strings.Contains(output, "COPY go.mod ./") {
@@ -79,14 +87,16 @@ func TestGoGenerator_Generate_WithoutGoSum(t *testing.T) {
 
 func TestGoGenerator_Generate_MultiStage(t *testing.T) {
 	g := &GoGenerator{
-		BinaryName: "myapp",
-		GoVersion:  "1.22",
-		HasGoSum:   true,
+		AppInfo: AppInfo{
+			BinaryName: "myapp",
+			GoVersion:  "1.22",
+			HasGoSum:   true,
+		},
 	}
 
-	output, err := g.Generate(".")
+	output, err := g.GenerateDockerfile(".")
 	if err != nil {
-		t.Fatalf("Generate failed: %v", err)
+		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
 
 	// Check it's a multi-stage build
@@ -105,14 +115,16 @@ func TestGoGenerator_Generate_MultiStage(t *testing.T) {
 
 func TestGoGenerator_Generate_EntryPoint(t *testing.T) {
 	g := &GoGenerator{
-		BinaryName: "myapp",
-		GoVersion:  "1.22",
-		HasGoSum:   true,
+		AppInfo: AppInfo{
+			BinaryName: "myapp",
+			GoVersion:  "1.22",
+			HasGoSum:   true,
+		},
 	}
 
-	output, err := g.Generate(".")
+	output, err := g.GenerateDockerfile(".")
 	if err != nil {
-		t.Fatalf("Generate failed: %v", err)
+		t.Fatalf("GenerateDockerfile failed: %v", err)
 	}
 
 	if !strings.Contains(output, `ENTRYPOINT ["/myapp"]`) {

@@ -1,6 +1,12 @@
 services:
-  {{.ServiceName}}:
+  {{.BinaryName}}:
     build: .
     ports:
       - "{{.Port}}:{{.Port}}"
     restart: unless-stopped
+{{- range .Services}}
+  {{.Name}}:
+    image: {{.Image}}
+    ports:
+      - "{{.Port}}:{{.Port}}"
+{{- end}}

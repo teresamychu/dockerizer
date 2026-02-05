@@ -1,4 +1,4 @@
-// Dockerize CLI - generates Dockerfiles for Go, Node.js, and Python projects
+// Dockerize CLI - generates Dockerfiles for Go Codebases
 package main
 
 import (
@@ -10,10 +10,9 @@ import (
 	"github.com/teresamychu/dockerizer/generators"
 )
 
-var golangTemplate string
-
 func main() {
-	output := flag.String("output", "Dockerfile", "output filename")
+	dockerfileOutput := flag.String("dockerfile", "Dockerfile", "Dockerfile output filename")
+	composeOutput := flag.String("compose", "docker-compose.yml", "docker-compose output filename")
 	flag.Parse()
 
 	path := "."
@@ -27,23 +26,45 @@ func main() {
 		os.Exit(1)
 	}
 
-	module, goversion, _ := parseGoMod(filepath.Join(path, "go.mod"))
-
+	module, goversion, services := ParseGoMod(filepath.Join(path, "go.mod"))
 	hasGoSum := fileExists(filepath.Join(path, "go.sum"))
 
-	gen := generators.GoGenerator{
-		BinaryName: module,
-		GoVersion:  goversion,
-		HasGoSum:   hasGoSum,
+	// Scan config files for port and env vars
+	appConfig := ScanConfig(path)
+	if appConfig.Port == "" {
+		appConfig.Port = "8080"
 	}
-	dockerFile, err := gen.Generate(path)
+
+	gen := generators.GoGenerator{
+		AppInfo: generators.AppInfo{
+			BinaryName: module,
+			GoVersion:  goversion,
+			HasGoSum:   hasGoSum,
+			Services:   services,
+		},
+		AppConfig: appConfig,
+	}
+	dockerFile, err := gen.GenerateDockerfile(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
 
-	outputPath := filepath.Join(path, *output)
+	outputPath := filepath.Join(path, *dockerfileOutput)
 	err = os.WriteFile(outputPath, []byte(dockerFile), 0644)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error writing file: %v\n", err)
+		os.Exit(1)
+	}
+
+	composeFile, err := gen.GenerateComposeFile(path)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	composeOutputPath := filepath.Join(path, *composeOutput)
+	err = os.WriteFile(composeOutputPath, []byte(composeFile), 0644)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error writing file: %v\n", err)
 		os.Exit(1)

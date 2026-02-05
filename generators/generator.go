@@ -4,5 +4,5 @@ package generators
 
 type Generator interface {
 	// Generate creates Dockerfile content for the given project path.
-	Generate(projectPath string) (string, error)
+	GenerateDockerfile(projectPath string) (string, error)
 }
