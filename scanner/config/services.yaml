@@ -92,3 +92,102 @@ cassandra:
   code_patterns: []
   image: cassandra:4
   port: "9042"
+
+clickhouse:
+  imports:
+    - ClickHouse/clickhouse-go
+    - mailru/go-clickhouse
+  code_patterns: []
+  image: clickhouse/clickhouse-server:latest
+  port: "9000"
+
+neo4j:
+  imports:
+    - neo4j/neo4j-go-driver
+  code_patterns: []
+  image: neo4j:5
+  port: "7687"
+
+couchbase:
+  imports:
+    - couchbase/gocb
+  code_patterns: []
+  image: couchbase:community-7.2.0
+  port: "8091"
+
+etcd:
+  imports:
+    - etcd-io/etcd/client
+  code_patterns: []
+  image: bitnami/etcd:latest
+  port: "2379"
+
+consul:
+  imports:
+    - hashicorp/consul/api
+  code_patterns: []
+  image: hashicorp/consul:latest
+  port: "8500"
+
+vault:
+  imports:
+    - hashicorp/vault/api
+  code_patterns: []
+  image: hashicorp/vault:latest
+  port: "8200"
+
+jaeger:
+  imports:
+    - jaegertracing/jaeger-client-go
+  code_patterns: []
+  image: jaegertracing/all-in-one:latest
+  port: "16686"
+
+zipkin:
+  imports:
+    - openzipkin/zipkin-go
+  code_patterns: []
+  image: openzipkin/zipkin:latest
+  port: "9411"
+
+cockroachdb:
+  imports:
+    - cockroachdb/cockroach-go
+  code_patterns: []
+  image: cockroachdb/cockroach:latest
+  port: "26257"
+
+dgraph:
+  imports:
+    - dgraph-io/dgo
+  code_patterns: []
+  image: dgraph/standalone:latest
+  port: "8080"
+
+arangodb:
+  imports:
+    - arangodb/go-driver
+  code_patterns: []
+  image: arangodb:latest
+  port: "8529"
+
+scylladb:
+  imports:
+    - scylladb/gocqlx
+  code_patterns: []
+  image: scylladb/scylla:latest
+  port: "9042"
+
+opensearch:
+  imports:
+    - opensearch-project/opensearch-go
+  code_patterns: []
+  image: opensearchproject/opensearch:latest
+  port: "9200"
+
+prometheus:
+  imports:
+    - prometheus/client_golang
+  code_patterns: []
+  image: prom/prometheus:latest
+  port: "9090"

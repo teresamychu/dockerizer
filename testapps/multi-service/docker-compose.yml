@@ -1,0 +1,18 @@
+services:
+  multi-service:
+    build: .
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"

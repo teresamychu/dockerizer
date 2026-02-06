@@ -1,0 +1,3 @@
+app_name: multi-service
+environment: production
+log_level: info
